@@ -3,19 +3,26 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 interface HomeState {
   isLoading: boolean;
   error: any;
-  response: any;
+  response: Object[];
+  input: string;
 }
 
 const initialState = {
   isLoading: false,
-  error: false,
-  response: undefined,
+  error: undefined,
+  response: [] as Object[],
+  input: [] as string[],
 };
 
 const homeSlice = createSlice({
   name: 'home',
   initialState,
-  reducers: {},
+  reducers: {
+    saveInput: (state, input) => {
+      state.input.push(input.payload);
+    },
+    clearResponseAndInput: (state) => ({ ...state, error: undefined, response: [] as Object[], input: [] as string[] }),
+  },
   extraReducers: (builder) => {
     builder.addCase(getForecast.pending, (state, action) => {
       state.isLoading = true;
@@ -23,13 +30,13 @@ const homeSlice = createSlice({
     // No response, action.payload will be the reponse.json()
     builder.addCase(getForecast.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.response = action.payload;
+      state.response.push(action.payload.result);
     });
     builder.addCase(getForecast.rejected, (state, action) => {
       console.log(action);
       state.isLoading = false;
 
-      // ISSUE with flask error with payload and normal http response errors
+      // Check action for error
 
       // state.error = JSON.parse(action?.error?.message || '{"error": "error"}');
     });
@@ -61,5 +68,7 @@ export const getForecast = createAsyncThunk('getForecast', async (ticker) => {
       return res;
     });
 });
+
+export const { saveInput, clearResponseAndInput } = homeSlice.actions;
 
 export default homeSlice.reducer;
