@@ -3,8 +3,9 @@ import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearResponseAndInput } from '../store/home.store';
+import { Button } from '@mui/material';
 import '../css/graph.css';
-import Home from './Home';
+import Search from './Search';
 
 export default function Graph({ data }) {
   const userInput = useSelector((state) => state.HomeStore.input);
@@ -89,28 +90,46 @@ export default function Graph({ data }) {
 
   return (
     <div className="graph-main">
-      <Home />
-      <div className="graph">
-        <Line
-          data={cleanData()}
-          // options={
-          //   {
-          //     scales: {
-          //       x: {
-          //         type: 'timeseries',
-          //       },
-          //     },
-          //   }
-          // }
-        />
+      <div className="graph-container">
+        <Search />
+        <div className="graph">
+          <Line
+            data={cleanData()}
+            options={{
+              scales: {
+                x: {
+                  ticks: {
+                    color: '#c7c8ca',
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+                y: {
+                  ticks: {
+                    color: '#c7c8ca',
+                  },
+                  grid: {
+                    color: 'black',
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+        <Button
+          variant="contained"
+          onClick={() => {
+            dispatch(clearResponseAndInput());
+          }}
+          size="large"
+          style={{
+            backgroundColor: '#bb86fc',
+          }}
+        >
+          Back
+        </Button>
       </div>
-      <button
-        onClick={() => {
-          dispatch(clearResponseAndInput());
-        }}
-      >
-        Back
-      </button>
     </div>
   );
 }

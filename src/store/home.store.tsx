@@ -5,6 +5,8 @@ interface HomeState {
   error: any;
   response: Object[];
   input: string;
+  stockOptions: { name: string; symbol: string }[];
+  stockOptionsError: boolean;
 }
 
 const initialState = {
@@ -12,6 +14,8 @@ const initialState = {
   error: undefined,
   response: [] as Object[],
   input: [] as string[],
+  stockOptions: [] as Object[],
+  stockOptionsError: false,
 };
 
 const homeSlice = createSlice({
@@ -40,13 +44,26 @@ const homeSlice = createSlice({
 
       // state.error = JSON.parse(action?.error?.message || '{"error": "error"}');
     });
+
+    // Get Stock Options
+    builder.addCase(getStockOptions.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getStockOptions.fulfilled, (state, action) => {
+      state.stockOptions = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(getStockOptions.rejected, (state, action) => {
+      state.isLoading = false;
+      state.stockOptionsError = true;
+    });
   },
 });
 
 // Async actions to fetch prediction from api
 // Docs: https://www.youtube.com/watch?v=2JBx_06dD1k&t=817s
 export const getForecast = createAsyncThunk('getForecast', async (ticker) => {
-  return await fetch('/predict', {
+  return await fetch('https://stock-prediction-flask.onrender.com/predict', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -67,6 +84,17 @@ export const getForecast = createAsyncThunk('getForecast', async (ticker) => {
       }
       return res;
     });
+});
+
+export const getStockOptions = createAsyncThunk('getStockOptions', async () => {
+  const endpoint = 'https://financialmodelingprep.com/api/v3/stock/list';
+  const apikey = import.meta.env.VITE_FMP_API_KEY;
+
+  const request = `${endpoint}?apikey=${apikey}`;
+
+  return await fetch(request)
+    .then((res) => res.json())
+    .then((data) => data.map(({ name, symbol }) => ({ name, symbol })));
 });
 
 export const { saveInput, clearResponseAndInput } = homeSlice.actions;
