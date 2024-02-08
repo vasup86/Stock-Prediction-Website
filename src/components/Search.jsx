@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Input } from '@mui/material';
-import { getForecast, saveInput } from '../store/home.store';
+import { getForecast, saveInput, clearResponseAndInput } from '../store/home.store';
 import { useDispatch, useSelector } from 'react-redux';
-import { Autocomplete, TextField, IconButton } from '@mui/material';
+import { IconButton, Backdrop, CircularProgress, Snackbar, Alert } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import '../css/search.css';
 
@@ -12,8 +12,9 @@ export default function Search() {
   // Used to dispatch actions to store
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.HomeStore.isLoading);
+  const error = useSelector((state) => state.HomeStore.error);
   // const stockOptions = useSelector((state) => state.HomeStore.stockOptions);
-  const stockOptionsError = useSelector((state) => state.HomeStore.stockOptionsError);
+  // const stockOptionsError = useSelector((state) => state.HomeStore.stockOptionsError);
   const userInput = useSelector((state) => state.HomeStore.input);
 
   const submitRequest = (event) => {
@@ -25,73 +26,45 @@ export default function Search() {
     }
   };
 
-  // const defaultProps = {
-  //   options: stockOptions,
-  //   getOptionLabel: (option) => option.title,
-  // };
-  // const flatProps = {
-  //   options: stockOptions.map((option) => option.title),
-  // };
-
   return (
     <div className="search-main">
       <div className="search-container">
-        {!isLoading && (
-          <form onSubmit={submitRequest}>
-            {/* <input type="text" value={input} required onChange={(e) => setInput(e.target.value)} /> */}
-            {/* <Autocomplete
-              {...defaultProps}
-              id="auto-complete"
-              autoComplete
-              includeInputInList
-              renderInput={(params) => <TextField {...params} label="autoComplete" variant="standard" />}
-              onChange={(e) => {
-                console.log(e);
-              }}
-              sx={{
-                input: { color: 'white' },
-                ':before': { borderBottomColor: 'white' },
-                // underline when selected
-                ':after': { borderBottomColor: 'green' },
-              }}
-            /> */}
-            {/* {stockOptionsError && (
-              <Input
-                id="standard-basic"
-                label="Standard"
-                variant="standard"
-                placeholder="Enter stock"
-                value={input}
-                required
-                onChange={(e) => setInput(e.target.value)}
-                sx={{
-                  input: { color: 'white' },
-                  ':before': { borderBottomColor: 'white' },
-                  // underline when selected
-                  ':after': { borderBottomColor: 'green' },
-                }}
-              />
-            )} */}
-            <Input
-              id="standard-basic"
-              label="Standard"
-              variant="standard"
-              placeholder="Enter stock ticker"
-              value={input}
-              required
-              onChange={(e) => setInput(e.target.value)}
-              sx={{
-                input: { color: '#c7c8ca' },
-                ':before': { borderBottomColor: '#BB86FC' },
-                // underline when selected
-                ':after': { borderBottomColor: '#03DAC6' },
-              }}
-            />
-            <IconButton aria-label="Search" type="submit">
-              <SearchIcon sx={{ color: '#c7c8ca' }} />
-            </IconButton>
-          </form>
-        )}
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={error}
+          autoHideDuration={3000}
+          onClose={() => {
+            dispatch(clearResponseAndInput());
+          }}
+        >
+          <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+            Invalid Input
+          </Alert>
+        </Snackbar>
+        <form onSubmit={submitRequest}>
+          {/* ! Checkout: https://mui.com/material-ui/react-autocomplete/ for optional autocomplete but still allows any input */}
+          <Input
+            id="standard-basic"
+            label="Standard"
+            variant="standard"
+            placeholder="Enter stock ticker"
+            value={input}
+            required
+            onChange={(e) => setInput(e.target.value)}
+            sx={{
+              input: { color: '#c7c8ca' },
+              ':before': { borderBottomColor: '#BB86FC' },
+              // underline when selected
+              ':after': { borderBottomColor: '#03DAC6' },
+            }}
+          />
+          <IconButton aria-label="Search" type="submit">
+            <SearchIcon sx={{ color: '#c7c8ca' }} />
+          </IconButton>
+        </form>
       </div>
     </div>
   );

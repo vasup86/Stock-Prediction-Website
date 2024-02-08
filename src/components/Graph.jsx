@@ -117,18 +117,20 @@ export default function Graph({ data }) {
             }}
           />
         </div>
-        <Button
-          variant="contained"
-          onClick={() => {
-            dispatch(clearResponseAndInput());
-          }}
-          size="large"
-          style={{
-            backgroundColor: '#bb86fc',
-          }}
-        >
-          Back
-        </Button>
+        <div className="button">
+          <Button
+            variant="contained"
+            onClick={() => {
+              dispatch(clearResponseAndInput());
+            }}
+            size="large"
+            style={{
+              backgroundColor: '#bb86fc',
+            }}
+          >
+            Back
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ interface HomeState {
 
 const initialState = {
   isLoading: false,
-  error: undefined,
+  error: false,
   response: [] as Object[],
   input: [] as string[],
   stockOptions: [] as Object[],
@@ -25,7 +25,7 @@ const homeSlice = createSlice({
     saveInput: (state, input) => {
       state.input.push(input.payload);
     },
-    clearResponseAndInput: (state) => ({ ...state, error: undefined, response: [] as Object[], input: [] as string[] }),
+    clearResponseAndInput: (state) => ({ ...state, error: false, response: [] as Object[], input: [] as string[] }),
   },
   extraReducers: (builder) => {
     builder.addCase(getForecast.pending, (state, action) => {
@@ -42,6 +42,7 @@ const homeSlice = createSlice({
 
       // Check action for error
 
+      state.error = true;
       // state.error = JSON.parse(action?.error?.message || '{"error": "error"}');
     });
 
@@ -92,9 +93,15 @@ export const getStockOptions = createAsyncThunk('getStockOptions', async () => {
 
   const request = `${endpoint}?apikey=${apikey}`;
 
+  // * Only store NASDAQ and NYSE stocks, all the options cannot be saved in the store, memory issue
+
   return await fetch(request)
     .then((res) => res.json())
-    .then((data) => data.map(({ name, symbol }) => ({ name, symbol })));
+    .then((data) =>
+      data
+        .filter(({ exchangeShortName }) => exchangeShortName === 'NASDAQ' || exchangeShortName === 'NYSE')
+        .map(({ name, symbol }) => ({ name, symbol }))
+    );
 });
 
 export const { saveInput, clearResponseAndInput } = homeSlice.actions;
