@@ -39,11 +39,7 @@ const homeSlice = createSlice({
     builder.addCase(getForecast.rejected, (state, action) => {
       console.log(action);
       state.isLoading = false;
-
-      // Check action for error
-
       state.error = true;
-      // state.error = JSON.parse(action?.error?.message || '{"error": "error"}');
     });
 
     // Get Stock Options
@@ -99,7 +95,10 @@ export const getStockOptions = createAsyncThunk('getStockOptions', async () => {
     .then((res) => res.json())
     .then((data) =>
       data
-        .filter(({ exchangeShortName }) => exchangeShortName === 'NASDAQ' || exchangeShortName === 'NYSE')
+        .filter(
+          ({ exchange, type }) =>
+            (exchange === 'NASDAQ Global Select' || exchange === 'New York Stock Exchange') && type === 'stock'
+        )
         .map(({ name, symbol }) => ({ name, symbol }))
     );
 });
