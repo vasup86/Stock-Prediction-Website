@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Input } from '@mui/material';
 import { getForecast, saveInput, clearResponseAndInput } from '../store/home.store';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -109,21 +108,6 @@ export default function Search() {
             variant="standard"
           />
 
-          {/* <Input
-            id="standard-basic"
-            label="Standard"
-            variant="standard"
-            placeholder="Enter stock ticker"
-            value={input}
-            required
-            onChange={(e) => setInput(e.target.value)}
-            sx={{
-              input: { color: '#c7c8ca' },
-              ':before': { borderBottomColor: '#BB86FC' },
-              // underline when selected
-              ':after': { borderBottomColor: '#03DAC6' },
-            }}
-          /> */}
           <IconButton aria-label="Search" type="submit">
             <SearchIcon sx={{ color: '#c7c8ca' }} />
           </IconButton>
