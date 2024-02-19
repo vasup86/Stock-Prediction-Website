@@ -91,7 +91,7 @@ export default function Graph({ data }) {
   return (
     <div className="graph-main">
       <div className="graph-container">
-        <Search />
+        <Search searchWidth="15em" />
         <div className="graph">
           <Line
             data={cleanData()}

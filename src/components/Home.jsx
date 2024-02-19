@@ -8,7 +8,7 @@ export default function Home() {
       <div className="home-main">
         <div className="title">Stock Predictor</div>
         <div>
-          <Search />
+          <Search searchWidth="30em" />
         </div>
       </div>
       <div className="footer">

@@ -12,9 +12,10 @@ import {
   createFilterOptions,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 import '../css/search.css';
 
-export default function Search() {
+export default function Search({ searchWidth }) {
   const [input, setInput] = useState('');
 
   // Used to dispatch actions to store
@@ -85,7 +86,7 @@ export default function Search() {
             }}
             onClose={() => setOpen(false)}
             sx={{
-              width: '12.5em',
+              width: searchWidth,
               // color: 'inherit',
               input: { color: '#c7c8ca' },
               '& .MuiTextField-root': {
@@ -94,23 +95,33 @@ export default function Search() {
               '& .MuiFormLabel-root': {
                 color: 'inherit',
               },
-              '& .MuiOutlinedInput-root ': {
-                padding: '0',
-              },
               '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-                borderBottom: '1px solid #BB86FC',
+                borderColor: '#daaa60',
+                borderRadius: '10px',
               },
             }}
             renderInput={(params) => (
-              <TextField {...params} label="Enter stock ticker" margin="normal" variant="outlined" />
+              <TextField
+                {...params}
+                label="Enter stock ticker"
+                margin="normal"
+                variant="outlined"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {' '}
+                      <IconButton aria-label="Search" type="submit">
+                        <SearchIcon sx={{ color: '#f7fdf9' }} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  disableUnderline: true,
+                }}
+              />
             )}
             variant="standard"
-          />
-
-          <IconButton aria-label="Search" type="submit">
-            <SearchIcon sx={{ color: '#c7c8ca' }} />
-          </IconButton>
+          ></Autocomplete>
         </form>
       </div>
     </div>
