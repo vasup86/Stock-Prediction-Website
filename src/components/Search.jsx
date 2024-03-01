@@ -17,6 +17,7 @@ import '../css/search.css';
 
 export default function Search({ searchWidth }) {
   const [input, setInput] = useState('');
+  const [clearField, setClearField] = useState(false);
 
   // Used to dispatch actions to store
   const dispatch = useDispatch();
@@ -28,12 +29,15 @@ export default function Search({ searchWidth }) {
 
   const submitRequest = (event) => {
     event.preventDefault();
-    setInput('');
+
     if (!userInput.includes(input.toUpperCase())) {
       dispatch(saveInput(input.toUpperCase().trim()));
       dispatch(getForecast(input.toUpperCase().trim()));
     }
+    setClearField((prev) => !prev);
+    setInput('');
   };
+
   const filterOptions = createFilterOptions({
     ignoreCase: true,
     matchFrom: 'start',
@@ -63,6 +67,7 @@ export default function Search({ searchWidth }) {
           {/* ! Checkout: https://mui.com/material-ui/react-autocomplete/  free solo for optional autocomplete but still allows any input */}
           <Autocomplete
             id="autocomplete"
+            key={clearField}
             open={open}
             required
             freeSolo
@@ -116,7 +121,7 @@ export default function Search({ searchWidth }) {
                       </IconButton>
                     </InputAdornment>
                   ),
-                  disableUnderline: true,
+                  // disableUnderline: true,
                 }}
               />
             )}
