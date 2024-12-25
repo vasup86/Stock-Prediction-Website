@@ -60,7 +60,7 @@ const homeSlice = createSlice({
 // Async actions to fetch prediction from api
 // Docs: https://www.youtube.com/watch?v=2JBx_06dD1k&t=817s
 export const getForecast = createAsyncThunk('getForecast', async (ticker) => {
-  return await fetch('https://stock-prediction-flask.onrender.com/predict', {
+  return await fetch('http://3.14.136.182/predict', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
