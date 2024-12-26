@@ -8,9 +8,9 @@ This project is for education purpose only. This project and available API's is 
 
 website: [https://stock-predictor-react.netlify.app/](https://stock-predictor-react.netlify.app/)
 
-API: [Endpoint](https://stock-prediction-flask.onrender.com/predict) [Documentation](https://github.com/vasup86/stock-prediction-api)
+API: [Endpoint](https://vasu-patel.me/predict) [Documentation](https://github.com/vasup86/stock-prediction-api)
 
-Website is hosted on netlify and backend is hosted on Render.
+Website is hosted on netlify and the backend is hosted on AWS using an EC2 Ubuntu instance.
 
 ## Introduction
 
@@ -30,7 +30,7 @@ The graph will show the price for the last 6 months and the 30 day predicted pri
 
 - Clone the repository
 - The master branch is the most stable branch at any given time, ensure you're working from it.
-- Run `npm insstall` to install all dependencies
+- Run `npm install` to install all dependencies
 - Run `npm run dev` to start local server.
 
 ## Technologies Used
